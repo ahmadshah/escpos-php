@@ -2,6 +2,8 @@
 
 namespace Epson;
 
+use Exception;
+
 /**
  * escpos-php, a Thermal receipt printer library, for use with
  * ESC/POS compatible printers.
