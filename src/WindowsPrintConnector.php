@@ -1,4 +1,7 @@
 <?php
+
+namespace Epson;
+
 /**
  * escpos-php, a Thermal receipt printer library, for use with
  * ESC/POS compatible printers.
@@ -26,7 +29,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * Connector for sending print jobs to
  * - local ports on windows (COM1, LPT1, etc)
  * - shared (SMB) printers from any platform (\\server\foo)
@@ -108,7 +111,7 @@ class WindowsPrintConnector implements PrintConnector {
 	 * @throws BadMethodCallException
 	 */
 	public function __construct($dest) {
-		$this -> platform = $this -> getCurrentPlatform();	
+		$this -> platform = $this -> getCurrentPlatform();
 		$this -> isLocal = false;
 		$this -> buffer = null;
 		$this -> userName = null;
@@ -176,7 +179,7 @@ class WindowsPrintConnector implements PrintConnector {
 
 	/**
 	 * Send job to printer -- platform-specific Linux code.
-	 * 
+	 *
 	 * @param string $data Print data
 	 * @throws Exception
 	 */
@@ -217,14 +220,14 @@ class WindowsPrintConnector implements PrintConnector {
 			throw new Exception("Failed to print. Command \"$redactedCommand\" failed with exit code $retval: " . trim($outputStr));
 		}
 	}
-	
+
 	protected function finalizeMac($data) {
 		throw new Exception("Mac printing not implemented.");
 	}
-	
+
 	/**
 	 * Send data to printer -- platform-specific Windows code.
-	 * 
+	 *
 	 * @param string $data
 	 */
 	protected function finalizeWin($data) {
@@ -269,7 +272,7 @@ class WindowsPrintConnector implements PrintConnector {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return string Current platform. Separated out for testing purposes.
 	 */
@@ -282,7 +285,7 @@ class WindowsPrintConnector implements PrintConnector {
 		}
 		return self::PLATFORM_LINUX;
 	}
-	
+
 	/* (non-PHPdoc)
 	 * @see PrintConnector::read()
 	 */
@@ -290,10 +293,10 @@ class WindowsPrintConnector implements PrintConnector {
 		/* Two-way communication is not supported */
 		return false;
 	}
-	
+
 	/**
 	 * Run a command, pass it data, and retrieve its return value, standard output, and standard error.
-	 * 
+	 *
 	 * @param string $command the command to run.
 	 * @param string $outputStr variable to fill with standard output.
 	 * @param string $errorStr variable to fill with standard error.
@@ -327,10 +330,10 @@ class WindowsPrintConnector implements PrintConnector {
 			return -1;
 		}
 	}
-	
+
 	/**
 	 * Copy a file. Separated out so that nothing is actually printed during test runs.
-	 * 
+	 *
 	 * @param string $from Source file
 	 * @param string $to Destination file
 	 * @return boolean True if copy was successful, false otherwise
@@ -338,10 +341,10 @@ class WindowsPrintConnector implements PrintConnector {
 	protected function runCopy($from, $to) {
 		return copy($from, $to);
 	}
-	
+
 	/**
 	 * Write data to a file. Separated out so that nothing is actually printed during test runs.
-	 * 
+	 *
 	 * @param string $data Data to print
 	 * @param string $to Destination file
          * @return boolean True if write was successful, false otherwise

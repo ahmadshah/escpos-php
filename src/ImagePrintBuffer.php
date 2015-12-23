@@ -1,4 +1,7 @@
 <?php
+
+namespace Epson;
+
 /**
  * escpos-php, a Thermal receipt printer library, for use with
  * ESC/POS compatible printers.
@@ -33,7 +36,7 @@
  */
 class ImagePrintBuffer implements PrintBuffer {
 	private $printer;
-	
+
 	function __construct() {
 		if(!EscposImage::isImagickLoaded()) {
 			throw new Exception("ImagePrintBuffer requires the imagick extension");
@@ -82,7 +85,7 @@ class ImagePrintBuffer implements PrintBuffer {
 		$image -> setImageFormat('png');
 		$image -> drawImage($draw);
 		//$image -> writeImage("test.png");
-		
+
 		/* Save image */
 		$escposImage = new EscposImage();
 		$escposImage -> readImageFromImagick($image);

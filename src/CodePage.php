@@ -1,4 +1,7 @@
 <?php
+
+namespace Epson;
+
 abstract class CodePage {
 	/** Code page constants, exported from iconv -l. Can be cut down*/
 	const CP037 = "CP037";
@@ -157,7 +160,7 @@ abstract class CodePage {
 	const CP928 = false;
 	const CP1098 = false;
 	const CP747 = false;
-	
+
 	/*
 	 * Below code pages appear to be vendor-specific (Star), so iconv wont use them
 	 * They are being merged gradually into the StarCapabilityProfile.
@@ -171,7 +174,7 @@ abstract class CodePage {
 	const CP3846 = false;
 	const CP3848 = false;
 	const CP1001 = false;
-	const CP2001 = false;	
+	const CP2001 = false;
 	const CP3001 = false;
 	const CP3002 = false;
 	const CP3011 = false;

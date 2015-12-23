@@ -1,7 +1,10 @@
 <?php
+
+namespace Epson;
+
 /**
  * This capability profile is designed for the P-822D.
- * 
+ *
  * See
  * https://github.com/mike42/escpos-php/issues/50
  */
@@ -39,7 +42,7 @@ class P822DCapabilityProfile extends DefaultCapabilityProfile {
 			34 => CodePage::CP1256,
 			35 => CodePage::CP1257,
 			255 => false, // Thai
-			
+
 			50 => CodePage::CP437,
 			51 => false, // Jatakana,
 			52 => CodePage::CP437,
@@ -82,7 +85,7 @@ class P822DCapabilityProfile extends DefaultCapabilityProfile {
 			89 => CodePage::CP3041
 		);
 	}
-	
+
 	public function getSupportsGraphics() {
 		/* Ask the driver to use bitImage wherever possible instead of graphics */
 		return false;

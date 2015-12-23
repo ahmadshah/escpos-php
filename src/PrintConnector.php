@@ -1,4 +1,7 @@
 <?php
+
+namespace Epson;
+
 /**
  * escpos-php, a Thermal receipt printer library, for use with
  * ESC/POS compatible printers.
@@ -26,7 +29,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * Interface passed to Escpos class for receiving print data. Print connectors
  * are responsible for transporting this to the actual printer.
  */
@@ -48,7 +51,7 @@ interface PrintConnector {
 	 * @return Data read from the printer, or false where reading is not possible.
 	 */
 	public function read($len);
-	
+
 	/**
 	 * @param string $data
 	 */

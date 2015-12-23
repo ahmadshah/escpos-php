@@ -1,23 +1,26 @@
 <?php
+
+namespace Epson;
+
 class StarCapabilityProfile extends DefaultCapabilityProfile {
 	function getCustomCodePages() {
 		// Code table reference: http://www.starmicronics.com/support/mannualfolder/sp2000pm.pdf
 		return array(
-			'CP3011' => "ÇüéâäàåçêëèïîìÄÅ" . 
-						"ÉæÆôöòûùÿÖÜ¢£¥₧ƒ" . 
-						"áíóúñÑªº¿⌐¬½¼¡«»" . 
-						"░▒▓│┤Ā╢ņ╕╣║╗╝╜╛┐" . 
-						"└┴┬├─┼ā╟╚╔╩╦╠═╬╧" . 
-						"Š╤čČ╘╒ģĪī┘┌█▄ūŪ▀" . 
-						"αßΓπΣσµτΦΘΩδ∞φε∩" . 
+			'CP3011' => "ÇüéâäàåçêëèïîìÄÅ" .
+						"ÉæÆôöòûùÿÖÜ¢£¥₧ƒ" .
+						"áíóúñÑªº¿⌐¬½¼¡«»" .
+						"░▒▓│┤Ā╢ņ╕╣║╗╝╜╛┐" .
+						"└┴┬├─┼ā╟╚╔╩╦╠═╬╧" .
+						"Š╤čČ╘╒ģĪī┘┌█▄ūŪ▀" .
+						"αßΓπΣσµτΦΘΩδ∞φε∩" .
 						"ĒēĢķĶļĻžŽ∙·√Ņš■ ",
-			'CP3012' => "АБВГДЕЖЗИЙКЛМНОП" . 
-						"РСТУФХЦЧШЩЪЫЬЭЮЯ" . 
-						"абвгдежзийклмноп" . 
-						"░▒▓│┤Ā╢ņ╕╣║╗╝Ō╛┐" . 
-						"└┴┬├─┼ā╟╚╔╩╦╠═╬╧" . 
-						"Š╤čČ╘╒ģĪī┘┌█▄ūŪ▀" . 
-						"рстуфхцчшщъыьэюя" . 
+			'CP3012' => "АБВГДЕЖЗИЙКЛМНОП" .
+						"РСТУФХЦЧШЩЪЫЬЭЮЯ" .
+						"абвгдежзийклмноп" .
+						"░▒▓│┤Ā╢ņ╕╣║╗╝Ō╛┐" .
+						"└┴┬├─┼ā╟╚╔╩╦╠═╬╧" .
+						"Š╤čČ╘╒ģĪī┘┌█▄ūŪ▀" .
+						"рстуфхцчшщъыьэюя" .
 						"ĒēĢķĶļĻžŽ∙·√Ņš■ "
 		);
 	}
@@ -27,7 +30,7 @@ class StarCapabilityProfile extends DefaultCapabilityProfile {
 				0 => CodePage::CP437, // "Normal"
 				1 => CodePage::CP437,
 				2 => CodePage::CP932,
-				3 => CodePage::CP437, 
+				3 => CodePage::CP437,
 				4 => CodePage::CP858,
 				5 => CodePage::CP852,
 				6 => CodePage::CP860,
@@ -76,7 +79,7 @@ class StarCapabilityProfile extends DefaultCapabilityProfile {
 	}
 
 	function getSupportsStarCommands() {
-		/* Allows Escpos.php to substitute emulated ESC/POS commands with native ones for this printer. */ 
+		/* Allows Escpos.php to substitute emulated ESC/POS commands with native ones for this printer. */
 		return true;
 	}
 }

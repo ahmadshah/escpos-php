@@ -1,24 +1,27 @@
 <?php
+
+namespace Epson;
+
 /**
  * escpos-php, a Thermal receipt printer library, for use with
  * ESC/POS compatible printers.
- * 
+ *
  * Copyright (c) 2014-2015 Michael Billington <michael.billington@gmail.com>,
  * 	incorporating modifications by:
  *  - Roni Saha <roni.cse@gmail.com>
  *  - Gergely Radics <gerifield@ustream.tv>
  *  - Warren Doyle <w.doyle@fuelled.co>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,37 +29,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * This class generates ESC/POS printer control commands for compatible printers.
  * See README.md for a summary of compatible printers and supported commands, and
  * basic usage.
- * 
+ *
  * See example/demo.php for a detailed print-out demonstrating the range of commands
  * implemented in this project.
- * 
+ *
  * Note that some functions have not been implemented:
  * 		- Set paper sensors
  * 		- Select print colour
- * 
+ *
  * Please direct feature requests, bug reports and contributions to escpos-php
  * on Github:
  * 		- https://github.com/mike42/escpos-php
  */
-require_once(dirname(__FILE__) . "/src/EscposImage.php");
-require_once(dirname(__FILE__) . "/src/PrintBuffer.php");
-require_once(dirname(__FILE__) . "/src/EscposPrintBuffer.php");
-require_once(dirname(__FILE__) . "/src/PrintConnector.php");
-require_once(dirname(__FILE__) . "/src/WindowsPrintConnector.php");
-require_once(dirname(__FILE__) . "/src/FilePrintConnector.php");
-require_once(dirname(__FILE__) . "/src/NetworkPrintConnector.php");
-require_once(dirname(__FILE__) . "/src/AbstractCapabilityProfile.php");
-require_once(dirname(__FILE__) . "/src/DefaultCapabilityProfile.php");
-require_once(dirname(__FILE__) . "/src/SimpleCapabilityProfile.php");
-require_once(dirname(__FILE__) . "/src/EposTepCapabilityProfile.php");
-require_once(dirname(__FILE__) . "/src/StarCapabilityProfile.php");
-require_once(dirname(__FILE__) . "/src/P822DCapabilityProfile.php");
-require_once(dirname(__FILE__) . "/src/CodePage.php");
-require_once(dirname(__FILE__) . "/src/ImagePrintBuffer.php");
 
 class Escpos {
 	/* ASCII codes */
@@ -79,35 +67,35 @@ class Escpos {
 	const BARCODE_CODABAR = 71;
 	const BARCODE_CODE93 = 72;
 	const BARCODE_CODE128 = 73;
-	
+
 	/* Barcode HRI (human-readable interpretation) text position */
 	const BARCODE_TEXT_NONE = 0;
 	const BARCODE_TEXT_ABOVE = 1;
 	const BARCODE_TEXT_BELOW = 2;
-	
+
 	/* Colors */
 	const COLOR_1 = 0;
 	const COLOR_2 = 1;
-	
+
 	/* Cut types */
 	const CUT_FULL = 65;
 	const CUT_PARTIAL = 66;
-	
+
 	/* Fonts */
 	const FONT_A = 0;
 	const FONT_B = 1;
 	const FONT_C = 2;
-	
+
 	/* Image sizing options */
 	const IMG_DEFAULT = 0;
 	const IMG_DOUBLE_WIDTH = 1;
 	const IMG_DOUBLE_HEIGHT = 2;
-	
+
 	/* Justifications */
 	const JUSTIFY_LEFT = 0;
 	const JUSTIFY_CENTER = 1;
 	const JUSTIFY_RIGHT = 2;
-	
+
 	/* Print mode constants */
 	const MODE_FONT_A = 0;
 	const MODE_FONT_B = 1;
@@ -115,18 +103,18 @@ class Escpos {
 	const MODE_DOUBLE_HEIGHT = 16;
 	const MODE_DOUBLE_WIDTH = 32;
 	const MODE_UNDERLINE = 128;
-	
+
 	/* QR code error correction levels */
 	const QR_ECLEVEL_L = 0;
 	const QR_ECLEVEL_M = 1;
 	const QR_ECLEVEL_Q = 2;
 	const QR_ECLEVEL_H = 3;
-	
+
 	/* QR code models */
 	const QR_MODEL_1 = 1;
 	const QR_MODEL_2 = 2;
 	const QR_MICRO = 3;
-	
+
 	/* Printer statuses */
 	const STATUS_PRINTER = 1;
 	const STATUS_OFFLINE_CAUSE = 2;
@@ -135,17 +123,17 @@ class Escpos {
 	const STATUS_INK_A = 7;
 	const STATUS_INK_B = 6;
 	const STATUS_PEELER = 8;
-	
+
 	/* Underline */
 	const UNDERLINE_NONE = 0;
 	const UNDERLINE_SINGLE = 1;
 	const UNDERLINE_DOUBLE = 2;
-	
+
 	/**
 	 * @var PrintBuffer The printer's output buffer.
 	 */
 	private $buffer;
-	
+
 	/**
 	 * @var PrintConnector
 	 */
@@ -155,7 +143,7 @@ class Escpos {
 	 * @var AbstractCapabilityProfile
 	 */
 	private $profile;
-	
+
 	/**
 	 * @var int Current character code table
 	 */
@@ -178,7 +166,7 @@ class Escpos {
 		}
 		/* Set connector */
 		$this -> connector = $connector;
-		
+
 		/* Set capability profile */
 		if($profile === null) {
 			$profile = DefaultCapabilityProfile::getInstance();
@@ -190,7 +178,7 @@ class Escpos {
 		$this -> setPrintBuffer($buffer);
 		$this -> initialize();
 	}
-	
+
 	/**
 	 * Print a barcode.
 	 *
@@ -250,13 +238,13 @@ class Escpos {
  		// More advanced function B, used in preference
  		$this -> connector -> write(self::GS . "k" . chr($type) . chr(strlen($content)) . $content);
 	}
-	
+
 	/**
 	 * Print an image, using the older "bit image" command. This creates padding on the right of the image,
 	 * if its width is not divisible by 8.
-	 * 
+	 *
 	 * Should only be used if your printer does not support the graphics() command.
-	 * 
+	 *
 	 * @param EscposImage $img The image to print
 	 * @param EscposImage $size Size modifier for the image.
 	 */
@@ -266,7 +254,7 @@ class Escpos {
 		$this -> connector -> write(self::GS . "v0" . chr($size) . $header);
 		$this -> connector -> write($img -> toRasterFormat());
 	}
-	
+
 	/**
 	 * Close the underlying buffer. With some connectors, the
 	 * job will not actually be sent to the printer until this is called.
@@ -274,7 +262,7 @@ class Escpos {
 	function close() {
 		$this -> connector -> finalize();
 	}
-	
+
 	/**
 	 * Cut the paper.
 	 *
@@ -285,10 +273,10 @@ class Escpos {
 		// TODO validation on cut() inputs
 		$this -> connector -> write(self::GS . "V" . chr($mode) . chr($lines));
 	}
-	
+
 	/**
 	 * Print and feed line / Print and feed n lines.
-	 * 
+	 *
 	 * @param int $lines Number of lines to feed
 	 */
 	function feed($lines = 1) {
@@ -301,11 +289,11 @@ class Escpos {
 	}
 
 	/**
-	 * Some printers require a form feed to release the paper. On most printers, this 
+	 * Some printers require a form feed to release the paper. On most printers, this
 	 * command is only useful in page mode, which is not implemented in this driver.
 	 */
 	function feedForm() {
-		$this -> connector -> write(self::FF);	
+		$this -> connector -> write(self::FF);
 	}
 
 	/**
@@ -324,7 +312,7 @@ class Escpos {
 	function getCharacterTable() {
 		return $this -> characterTable;
 	}
-	
+
 	/**
 	 * @return PrintBuffer
 	 */
@@ -428,20 +416,20 @@ class Escpos {
 		}
 		return $ret;
 	}
-	
+
 	/**
 	 * Print an image to the printer.
-	 * 
+	 *
 	 * Size modifiers are:
 	 * - IMG_DEFAULT (leave image at original size)
 	 * - IMG_DOUBLE_WIDTH
 	 * - IMG_DOUBLE_HEIGHT
-	 * 
+	 *
 	 * See the example/ folder for detailed examples.
-	 * 
+	 *
 	 * The function bitImage() takes the same parameters, and can be used if
 	 * your printer doesn't support the newer graphics commands.
-	 * 
+	 *
 	 * @param EscposImage $img The image to print.
 	 * @param int $size Output size modifier for the image.
 	 */
@@ -456,7 +444,7 @@ class Escpos {
 		$this -> wrapperSendGraphicsData('0', 'p', $header . $img -> toRasterFormat());
 		$this -> wrapperSendGraphicsData('0', '2');
 	}
-	
+
 	/**
 	 * Initialize printer. This resets formatting back to the defaults.
 	 */
@@ -464,7 +452,7 @@ class Escpos {
 		$this -> connector -> write(self::ESC . "@");
 		$this -> characterTable = 0;
 	}
-	
+
 	/**
 	 * Generate a pulse, for opening a cash drawer if one is connected.
 	 * The default settings should open an Epson drawer.
@@ -479,10 +467,10 @@ class Escpos {
 		self::validateInteger($off_ms, 1, 511, __FUNCTION__);
 		$this -> connector -> write(self::ESC . "p" . chr($pin + 48) . chr($on_ms / 2) . chr($off_ms / 2));
 	}
-	
+
 	/**
 	 * Print the given data as a QR code on the printer.
-	 * 
+	 *
 	 * @param string $content The content of the code. Numeric data will be more efficiently compacted.
 	 * @param int $ec Error-correction level to use. One of Escpos::QR_ECLEVEL_L (default), Escpos::QR_ECLEVEL_M, Escpos::QR_ECLEVEL_Q or Escpos::QR_ECLEVEL_H. Higher error correction results in a less compact code.
 	 * @param int $size Pixel size to use. Must be 1-16 (default 3)
@@ -515,7 +503,7 @@ class Escpos {
 	/**
 	 * Switch character table (code page) manually. Used in conjunction with textRaw() to
 	 * print special characters which can't be encoded automatically.
-	 * 
+	 *
 	 * @param int $table The table to select. Available code tables are model-specific.
 	 */
 	function selectCharacterTable($table = 0) {
@@ -535,7 +523,7 @@ class Escpos {
 
 	/**
 	 * Select print mode(s).
-	 * 
+	 *
 	 * Several MODE_* constants can be OR'd together passed to this function's `$mode` argument. The valid modes are:
 	 *  - MODE_FONT_A
 	 *  - MODE_FONT_B
@@ -543,7 +531,7 @@ class Escpos {
 	 *  - MODE_DOUBLE_HEIGHT
 	 *  - MODE_DOUBLE_WIDTH
 	 *  - MODE_UNDERLINE
-	 * 
+	 *
 	 * @param int $mode The mode to use. Default is Escpos::MODE_FONT_A, with no special formatting. This has a similar effect to running initialize().
 	 */
 	function selectPrintMode($mode = self::MODE_FONT_A) {
@@ -554,7 +542,7 @@ class Escpos {
 
 		$this -> connector -> write(self::ESC . "!" . chr($mode));
 	}
-	
+
 	/**
 	 * Set barcode height.
 	 *
@@ -564,18 +552,18 @@ class Escpos {
 		self::validateInteger($height, 1, 255, __FUNCTION__);
 		$this -> connector -> write(self::GS . "h" . chr($height));
 	}
-	
-	
+
+
 	/**
 	 * Set the position for the Human Readable Interpretation (HRI) of barcode characters.
-	 * 
+	 *
 	 * @param position $position. Use Escpos::BARCODE_TEXT_NONE to hide the text (default), or any combination of Escpos::BARCODE_TEXT_TOP and Escpos::BARCODE_TEXT_BOTTOM flags to display the text.
 	 */
 	function setBarcodeTextPosition($position = self::BARCODE_TEXT_NONE) {
 		self::validateInteger($position, 0, 3, __FUNCTION__, "Barcode text position");
 		$this -> connector -> write(self::GS . "H" . chr($position));
 	}
-	
+
 	/**
 	 * Turn double-strike mode on/off.
 	 *
@@ -588,7 +576,7 @@ class Escpos {
 
 	/**
 	 * Select print color on printers that suppoer multiple colors.
-	 * 
+	 *
 	 * @param int $color Color to use. Should be one of Escpos::COLOR_1 (default), or Escpos::COLOR_2.
 	 */
 	function setColor($color = self::COLOR_1) {
@@ -605,7 +593,7 @@ class Escpos {
 		self::validateBoolean($on, __FUNCTION__);
 		$this -> connector -> write(self::ESC . "E". ($on ? chr(1) : chr(0)));
 	}
-	
+
 	/**
 	 * Select font. Most printers have two fonts (Fonts A and B), and some have a third (Font C).
 	 *
@@ -615,7 +603,7 @@ class Escpos {
 		self::validateInteger($font, 0, 2, __FUNCTION__);
 		$this -> connector -> write(self::ESC . "M" . chr($font));
 	}
-	
+
 	/**
 	 * Select justification.
 	 *
@@ -625,10 +613,10 @@ class Escpos {
 		self::validateInteger($justification, 0, 2, __FUNCTION__);
 		$this -> connector -> write(self::ESC . "a" . chr($justification));
 	}
-	
+
 	/**
 	 * Attach a different print buffer to the printer. Buffers are responsible for handling text output to the printer.
-	 * 
+	 *
 	 * @param PrintBuffer $buffer The buffer to use.
 	 * @throws InvalidArgumentException Where the buffer is already attached to a different printer.
 	 */
@@ -645,10 +633,10 @@ class Escpos {
 		$this -> buffer = $buffer;
 		$this -> buffer -> setPrinter($this);
 	}
-	
+
 	/**
 	 * Set black/white reverse mode on or off. In this mode, text is printed white on a black background.
-	 * 
+	 *
 	 * @param boolean $on True to enable, false to disable.
 	 */
 	function setReverseColors($on = true) {
@@ -658,23 +646,23 @@ class Escpos {
 
 	/**
 	 * Set the size of text, as a multiple of the normal size.
-	 * 
+	 *
 	 * @param int $widthMultiplier Multiple of the regular height to use (range 1 - 8)
 	 * @param int $heightMultiplier Multiple of the regular height to use (range 1 - 8)
 	 */
 	function setTextSize($widthMultiplier, $heightMultiplier) {
 		self::validateInteger($widthMultiplier, 1, 8, __FUNCTION__);
 		self::validateInteger($heightMultiplier, 1, 8, __FUNCTION__);
-		$c = pow(2,4) * ($widthMultiplier - 1) + ($heightMultiplier - 1);		
+		$c = pow(2,4) * ($widthMultiplier - 1) + ($heightMultiplier - 1);
 		$this -> connector -> write(self::GS . "!" . chr($c));
 	}
 
 	/**
 	 * Set underline for printed text.
-	 * 
+	 *
 	 * Argument can be true/false, or one of UNDERLINE_NONE,
 	 * UNDERLINE_SINGLE or UNDERLINE_DOUBLE.
-	 * 
+	 *
 	 * @param int $underline Either true/false, or one of Escpos::UNDERLINE_NONE, Escpos::UNDERLINE_SINGLE or Escpos::UNDERLINE_DOUBLE. Defaults to Escpos::UNDERLINE_SINGLE.
 	 */
 	function setUnderline($underline = self::UNDERLINE_SINGLE) {
@@ -688,7 +676,7 @@ class Escpos {
 		self::validateInteger($underline, 0, 2, __FUNCTION__);
 		$this -> connector -> write(self::ESC . "-". chr($underline));
 	}
-	
+
 	/**
 	 * Add text to the buffer.
 	 *
@@ -701,7 +689,7 @@ class Escpos {
 		self::validateString($str, __FUNCTION__);
 		$this -> buffer -> writeText((string)$str);
 	}
-	
+
 	/**
 	 * Add text to the buffer without attempting to interpret chararacter codes.
 	 *
@@ -714,10 +702,10 @@ class Escpos {
 		self::validateString($str, __FUNCTION__);
 		$this -> buffer -> writeTextRaw((string)$str);
 	}
-	
+
 	/**
 	 * Wrapper for GS ( k, to calculate and send correct data length.
-	 * 
+	 *
 	 * @param string $fn Function to use
 	 * @param string $cn Output code type. Affects available data
 	 * @param string $data Data to send.
@@ -731,7 +719,7 @@ class Escpos {
 		$header = $this -> intLowHigh(strlen($data) + strlen($m) + 2, 2);
 		$this -> connector -> write(self::GS . "(k" . $header . $cn . $fn . $m . $data);
 	}
-	
+
 	/**
 	 * Wrapper for GS ( L, to calculate and send correct data length.
 	 *
@@ -747,10 +735,10 @@ class Escpos {
 		$header = $this -> intLowHigh(strlen($data) + 2, 2);
 		$this -> connector -> write(self::GS . "(L" . $header . $m . $fn . $data);
 	}
-	
+
 	/**
 	 * Convert widths and heights to characters. Used before sending graphics to set the size.
-	 * 
+	 *
 	 * @param array $inputs
 	 * @param boolean $long True to use 4 bytes, false to use 2
 	 * @return string
@@ -767,7 +755,7 @@ class Escpos {
 		}
 		return implode("", $outp);
 	}
-	
+
 	/**
 	 * Generate two characters for a number: In lower and higher parts, or more parts as needed.
 	 * @param int $int Input number
@@ -784,10 +772,10 @@ class Escpos {
 		}
 		return $outp;
 	}
-	
+
 	/**
 	 * Throw an exception if the argument given is not a boolean
-	 * 
+	 *
 	 * @param boolean $test the input to test
 	 * @param string $source the name of the function calling this
 	 */
@@ -796,10 +784,10 @@ class Escpos {
 			throw new InvalidArgumentException("Argument to $source must be a boolean");
 		}
 	}
-	
+
 	/**
 	 * Throw an exception if the argument given is not an integer within the specified range
-	 * 
+	 *
 	 * @param int $test the input to test
 	 * @param int $min the minimum allowable value (inclusive)
 	 * @param int $max the maximum allowable value (inclusive)
@@ -809,7 +797,7 @@ class Escpos {
 	protected static function validateInteger($test, $min, $max, $source, $argument = "Argument") {
 		self::validateIntegerMulti($test, array(array($min, $max)), $source, $argument);
 	}
-	
+
 	/**
 	 * Throw an exception if the argument given is not an integer within one of the specified ranges
 	 *
@@ -843,7 +831,7 @@ class Escpos {
 			throw new InvalidArgumentException("$argument given to $source must be in $rangeStr, but $test was given.");
 		}
 	}
-	
+
 	/**
 	 * Throw an exception if the argument given can't be cast to a string
 	 *
@@ -856,7 +844,7 @@ class Escpos {
 			throw new InvalidArgumentException("$argument to $source must be a string");
 		}
 	}
-	
+
 	protected static function validateStringRegex($test, $source, $regex, $argument = "Argument") {
 		if(preg_match($regex, $test) === 0) {
 			throw new InvalidArgumentException("$argument given to $source is invalid. It should match regex '$regex', but '$test' was given.");

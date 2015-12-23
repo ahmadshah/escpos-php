@@ -1,24 +1,27 @@
 <?php
+
+namespace Epson;
+
 /**
  * escpos-php, a Thermal receipt printer library, for use with
  * ESC/POS compatible printers.
- * 
+ *
  * Copyright (c) 2014-2015 Michael Billington <michael.billington@gmail.com>,
  * 	incorporating modifications by:
  *  - Roni Saha <roni.cse@gmail.com>
  *  - Gergely Radics <gerifield@ustream.tv>
  *  - Warren Doyle <w.doyle@fuelled.co>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,7 +29,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * This class manages newlines and character encoding for the target printer, and
  * can be interchanged for an image-bassed buffer (ImagePrintBuffer) if you can't
  * get it operating properly on your machine.
@@ -87,7 +90,7 @@ class EscposPrintBuffer implements PrintBuffer {
 		}
 	}
 
-	public function writeText($text) {	
+	public function writeText($text) {
 		if($this -> printer == null) {
 			throw new LogicException("Not attached to a printer.");
 		}
@@ -118,7 +121,7 @@ class EscposPrintBuffer implements PrintBuffer {
 				}
 			} while($matching && $i < $len);
 			$this -> writeTextUsingEncoding(mb_substr($text, $i - $j, $j, self::INPUT_ENCODING), $encoding);
-		}	
+		}
 	}
 
 	public function writeTextRaw($text) {
@@ -140,7 +143,7 @@ class EscposPrintBuffer implements PrintBuffer {
 
 	/**
 	 * Return an encoding which we can start to use for outputting this text. Later parts of the text need not be included in the returned code page.
-	 * 
+	 *
 	 * @param string $text Input text to check.
 	 * @return boolean|integer Code page number, or FALSE if the text is not printable on any supported encoding.
 	 */
@@ -157,7 +160,7 @@ class EscposPrintBuffer implements PrintBuffer {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Based on the printer's connector, compute (or load a cached copy of) maps of UTF character to unicode characters for later use.
 	 */
@@ -185,7 +188,7 @@ class EscposPrintBuffer implements PrintBuffer {
 		$encode = array();
 		$available = array();
 		$custom = $this -> printer -> getPrinterCapabilityProfile() -> getCustomCodePages();
-		
+
 		foreach($supportedCodePages as $num => $characterMap) {
 			$encode[$num] = array();
 			if($characterMap === false) {
@@ -246,7 +249,7 @@ class EscposPrintBuffer implements PrintBuffer {
 
 	/**
 	 * Encode a block of text using the specified map, and write it to the printer.
-	 * 
+	 *
 	 * @param string $text Text to print, UTF-8 format.
 	 * @param integer $encodingNo Encoding number to use- assumed to exist.
 	 */
@@ -270,7 +273,7 @@ class EscposPrintBuffer implements PrintBuffer {
 
 	/**
 	 * Write data to the underlying printer.
-	 * 
+	 *
 	 * @param string $data
 	 */
 	private function write($data) {

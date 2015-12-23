@@ -1,7 +1,10 @@
 <?php
+
+namespace Epson;
+
 /**
  * This capability profile matches many recent Epson-branded thermal receipt printers.
- * 
+ *
  * For non-Epson printers, try the SimpleCapabilityProfile.
  */
 class DefaultCapabilityProfile extends AbstractCapabilityProfile {
@@ -11,9 +14,9 @@ class DefaultCapabilityProfile extends AbstractCapabilityProfile {
 
 	function getSupportedCodePages() {
 		/* Character code tables which the printer understands, mapping to known encoding standards we may be able to encode to.
-		 * 
+		 *
 		 * See CodePage.php for the mapping of these standards to encoding names for use in the backing library.
-		 * 
+		 *
 		 * Any entry with 'false' means I haven't compared the print-out of the code page to a table.
 		 */
 		return array(
@@ -84,7 +87,7 @@ class DefaultCapabilityProfile extends AbstractCapabilityProfile {
 	function getSupportsBarcodeB() {
 		return true;
 	}
-	
+
 	function getSupportsBitImage() {
 		return true;
 	}

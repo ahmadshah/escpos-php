@@ -1,4 +1,7 @@
 <?php
+
+namespace Epson;
+
 /**
  * escpos-php, a Thermal receipt printer library, for use with
  * ESC/POS compatible printers.
@@ -26,7 +29,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * PrintConnector for passing print data to a file.
  */
 class FilePrintConnector implements PrintConnector {
@@ -37,7 +40,7 @@ class FilePrintConnector implements PrintConnector {
 
 	/**
 	 * Construct new connector, given a filename
-	 * 
+	 *
 	 * @param string $filename
 	 */
 	public function __construct($filename) {
@@ -60,7 +63,7 @@ class FilePrintConnector implements PrintConnector {
 		fclose($this -> fp);
 		$this -> fp = false;
 	}
-	
+
 	/* (non-PHPdoc)
 	 * @see PrintConnector::read()
 	 */
@@ -68,10 +71,10 @@ class FilePrintConnector implements PrintConnector {
 		rewind($this -> fp);
 		return fgets($this -> fp, $len + 1);
 	}
-	
+
 	/**
 	 * Write data to the file
-	 * 
+	 *
 	 * @param string $data
 	 */
 	public function write($data) {
